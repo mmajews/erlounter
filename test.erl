@@ -14,6 +14,7 @@
 -export([got_page_info/3]).
 -export([content_length/1]).
 -export([]).
+-export([]).
 page_info(URL) ->
   inets:start(),
   case httpc:request(URL) of
