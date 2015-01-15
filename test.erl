@@ -29,10 +29,11 @@ got_page_info(URL, PageSize,Body) ->
   Tree = mochiweb_html:parse(Body),
 
   %particular files being listed and removing duplicates
-
+  Imgs = rDup(mochiweb_xpath:execute("//img/@src",Tree)),
+  Css = rDup(mochiweb_xpath:execute("//link[@rel=’stylesheet’]/@href",Tree)),
+  Scripts = rDup(mochiweb_xpath:execute("//script/@src",Tree)),
 
   lists:flatten(io_lib:format("~p", [Tree])).
-
 
 content_length(Headers) ->
   %proplists:get_value(Key,List,Default)
