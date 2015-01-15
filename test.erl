@@ -16,6 +16,8 @@
 -export([spawn_workers/3]).
 -export([get_info/3]).
 -export([get_url_context/1]).
+
+%declaring record that will hold number of images, css and scripts
 -record(state, {page,timer,errors,img,css,script}).
 
 
