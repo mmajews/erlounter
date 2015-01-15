@@ -13,8 +13,8 @@
 -export([page_info/1]).
 -export([got_page_info/3]).
 -export([content_length/1]).
--export([]).
--export([]).
+-export([spawn_workers/3]).
+-export([get_url_context/1]).
 page_info(URL) ->
   inets:start(),
   case httpc:request(URL) of
@@ -38,7 +38,7 @@ got_page_info(URLpassed, PageSize,Body) ->
   Scripts = rDup(mochiweb_xpath:execute("//script/@src",Tree)),
 
   %preapring URL
-  URL = URLpassed,
+  URL = get_url_context(URL),
 
 
   lists:flatten(io_lib:format("~p", [Tree])).
@@ -51,3 +51,13 @@ content_length(Headers) ->
 %function that removes dulpicate
 rDup(L) ->
   sets:to_list(sets:from_list(L)).
+
+%spawn workers for every URl, who send back info about components -> getinfo
+spawn_workers(URLctx,Type,URLs) ->
+  Supervisor = self(),
+  lists:foreach(fun (Url) -> spawn( fun () ->
+                                    Supervisor ! get_info(URLctx,Url,Type)
+                                    end)
+              end, URLs).
+
+get_url_context(URL) -> []. %% gib my url with context
