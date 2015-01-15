@@ -16,6 +16,10 @@
 -export([spawn_workers/3]).
 -export([get_info/3]).
 -export([get_url_context/1]).
+-record(state, {page,timer,errors,img,css,script}).
+
+
+
 page_info(URL) ->
   inets:start(),
   case httpc:request(URL) of
@@ -41,6 +45,13 @@ got_page_info(URLpassed, PageSize,Body) ->
   %preapring URL
   URL = get_url_context(URLpassed),
 
+  TRef = erlang:send_after(?TIMEOUT,self(),timeout),
+  State = #state{page=PageSize,
+    timer=TRef,
+    errors=[],
+    img=0,
+    css=0,
+    script=0},
 
   lists:flatten(io_lib:format("~p", [Tree])).
 
