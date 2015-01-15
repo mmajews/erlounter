@@ -24,14 +24,19 @@ page_info(URL) ->
       {error,Reason}
   end.
 
-got_page_info(URL, PageSize,Body) ->
+got_page_info(URLpassed, PageSize,Body) ->
   %getting the parsed version of website
   Tree = mochiweb_html:parse(Body),
+
 
   %particular files being listed and removing duplicates
   Imgs = rDup(mochiweb_xpath:execute("//img/@src",Tree)),
   Css = rDup(mochiweb_xpath:execute("//link[@rel=’stylesheet’]/@href",Tree)),
   Scripts = rDup(mochiweb_xpath:execute("//script/@src",Tree)),
+
+  %preapring URL
+  URL = URLpassed,
+
 
   lists:flatten(io_lib:format("~p", [Tree])).
 
