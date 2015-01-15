@@ -25,8 +25,20 @@ page_info(URL) ->
   end.
 
 got_page_info(URL, PageSize,Body) ->
+  %getting the parsed version of website
   Tree = mochiweb_html:parse(Body),
+
+  %particular files being listed and removing duplicates
+
+
   lists:flatten(io_lib:format("~p", [Tree])).
 
+
 content_length(Headers) ->
+  %proplists:get_value(Key,List,Default)
+  %returns the length of the content
   list_to_integer(proplists:get_value("content-length",Headers,"0")).
+
+%function that removes dulpicate
+rDup(L) ->
+  sets:to_list(sets:from_list(L)).
