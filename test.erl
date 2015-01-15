@@ -19,13 +19,14 @@ page_info(URL) ->
   inets:start(),
   case httpc:request(URL) of
     {ok,{_,Headers,Body}} ->
+      %test:page_info("http://google.com").
       got_page_info(URL,content_length(Headers),Body);
     {error,Reason} ->
       {error,Reason}
   end.
 
 got_page_info(URL, PageSize,Body) ->
-  Tree = mochiweb_html:parse(Body),
+  Tree = mochiweb_xpath:execute("//body",mochiweb_html:parse(Body)),
   Tree.
 
 content_length(Headers) ->
