@@ -19,7 +19,6 @@ page_info(URL) ->
   inets:start(),
   case httpc:request(URL) of
     {ok,{_,Headers,Body}} ->
-      %test:page_info("http://google.com").
       got_page_info(URL,content_length(Headers),Body);
     {error,Reason} ->
       {error,Reason}
