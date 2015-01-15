@@ -26,8 +26,8 @@ page_info(URL) ->
   end.
 
 got_page_info(URL, PageSize,Body) ->
-  Tree = mochiweb_xpath:execute("//body",mochiweb_html:parse(Body)),
-  Tree.
+  Tree = mochiweb_html:parse(Body),
+  lists:flatten(io_lib:format("~p", [Tree])).
 
 content_length(Headers) ->
   list_to_integer(proplists:get_value("content-length",Headers,"0")).
