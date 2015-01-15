@@ -31,7 +31,10 @@ got_page_info(URLpassed, PageSize,Body) ->
 
   %particular files being listed and removing duplicates
   Imgs = rDup(mochiweb_xpath:execute("//img/@src",Tree)),
-  Css = rDup(mochiweb_xpath:execute("//link[@rel=’stylesheet’]/@href",Tree)),
+
+  %css does not work, do not know why
+  %Css = rDup(mochiweb_xpath:execute("//link[@rel=’stylesheet’]",Tree)),
+
   Scripts = rDup(mochiweb_xpath:execute("//script/@src",Tree)),
 
   %preapring URL
