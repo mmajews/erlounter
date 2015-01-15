@@ -14,6 +14,7 @@
 -export([got_page_info/3]).
 -export([content_length/1]).
 -export([spawn_workers/3]).
+-export([get_info/3]).
 -export([get_url_context/1]).
 page_info(URL) ->
   inets:start(),
@@ -38,7 +39,7 @@ got_page_info(URLpassed, PageSize,Body) ->
   Scripts = rDup(mochiweb_xpath:execute("//script/@src",Tree)),
 
   %preapring URL
-  URL = get_url_context(URL),
+  URL = get_url_context(URLpassed),
 
 
   lists:flatten(io_lib:format("~p", [Tree])).
@@ -61,3 +62,5 @@ spawn_workers(URLctx,Type,URLs) ->
               end, URLs).
 
 get_url_context(URL) -> []. %% gib my url with context
+
+get_info(URlctx,Url,Type) -> [].
