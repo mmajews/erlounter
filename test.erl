@@ -49,7 +49,7 @@ got_page_info(URLpassed, PageSize,Body) ->
   URL = get_url_context(URLpassed),
 
   %Starts a timer which will send the message Msg to Dest after Time milliseconds.
-  TRef = erlang:send_after(1,self(),timeout),
+  TRef = erlang:send_after(10000,self(),timeout),
   State = #state{page=PageSize,
     timer=TRef,
     errors=[],
