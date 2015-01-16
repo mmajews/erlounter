@@ -31,6 +31,7 @@ page_info(URL) ->
       {error,Reason}
   end.
 
+
 got_page_info(URLpassed, PageSize,Body) ->
   %getting the parsed version of website
   Tree = mochiweb_html:parse(Body),
@@ -47,7 +48,8 @@ got_page_info(URLpassed, PageSize,Body) ->
   %preapring URL
   URL = get_url_context(URLpassed),
 
-  TRef = erlang:send_after(?TIMEOUT,self(),timeout),
+  %Starts a timer which will send the message Msg to Dest after Time milliseconds.
+  TRef = erlang:send_after(1,self(),timeout),
   State = #state{page=PageSize,
     timer=TRef,
     errors=[],
