@@ -14,8 +14,9 @@
 -export([got_page_info/3]).
 -export([content_length/1]).
 -export([spawn_workers/3]).
--export([get_info/3]).
+-export([get_info/2]).
 -export([get_url_context/1]).
+-export([wait_for_responses/2]).
 
 %declaring record that will hold number of images, css and scripts
 -record(state, {page,timer,errors,img,css,script}).
@@ -32,6 +33,7 @@ page_info(URL) ->
   end.
 
 
+
 got_page_info(URLpassed, PageSize,Body) ->
   %getting the parsed version of website
   Tree = mochiweb_html:parse(Body),
@@ -41,7 +43,7 @@ got_page_info(URLpassed, PageSize,Body) ->
   Imgs = rDup(mochiweb_xpath:execute("//img/@src",Tree)),
 
   %css does not work, do not know why
-  %Css = rDup(mochiweb_xpath:execute("//link[@rel=’stylesheet’]",Tree)),
+  %Css = rDup(mochiweb_xpath:execute("//link[@rel=’stylesheet’]/@href",Tree)),
 
   Scripts = rDup(mochiweb_xpath:execute("//script/@src",Tree)),
 
@@ -56,6 +58,9 @@ got_page_info(URLpassed, PageSize,Body) ->
     img=0,
     css=0,
     script=0},
+
+  %number of elements -> so number of responses we should wait for
+  wait_for_responses(State,length(Imgs)  + length(Scripts)),
 
   lists:flatten(io_lib:format("~p", [Tree])).
 
@@ -72,10 +77,13 @@ rDup(L) ->
 spawn_workers(URLctx,Type,URLs) ->
   Supervisor = self(),
   lists:foreach(fun (Url) -> spawn( fun () ->
-                                    Supervisor ! get_info(URLctx,Url,Type)
+                                    Supervisor ! {component, Type,Url,get_info(URLctx,Url)}
                                     end)
               end, URLs).
 
 get_url_context(URL) -> []. %% gib my url with context
 
-get_info(URlctx,Url,Type) -> [].
+get_info(URlctx,Url) -> [].
+
+
+wait_for_responses(State,Counter) -> []. %listener
