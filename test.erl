@@ -85,7 +85,14 @@ get_url_context(URL) ->
   Ctx = string:sub_string(Path,1, string:rstr(Path,"/")),
   {"http://"++Root,Ctx}. %% gib my url with context
 
-get_info(URlctx,Url) -> [].
+get_info(URlctx,Url) ->
+  FullURL = full_url(URlctx,Url),
+  case httpc:request(head,{FullURL,[]},[],[]) of
+    {ok, {_,Headers,_Body}} ->
+      {ok,content_length(Headers)};
+    {error,Reason} ->
+      {error,Reason}
+  end.
 
 
 %FULL URL FUNCTIONS
