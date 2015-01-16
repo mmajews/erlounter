@@ -75,9 +75,9 @@ rDup(L) ->
 
 %spawn workers for every URl, who send back info about components -> getinfo
 spawn_workers(URLctx,Type,URLs) ->
-  Supervisor = self(),
+
   lists:foreach(fun (Url) -> spawn( fun () ->
-                                    Supervisor ! {component, Type,Url,get_info(URLctx,Url)}
+                                    self() ! {component, Type,Url,get_info(URLctx,Url)}
                                     end)
               end, URLs).
 
@@ -85,5 +85,26 @@ get_url_context(URL) -> []. %% gib my url with context
 
 get_info(URlctx,Url) -> [].
 
+%collect infos recieved from wait_for_resposnses and add them to proper field of State
+collect_info(State = #state{css=Css},css,_URL,{ok,Info}) ->
+         State#state{css = Css + Info};
+collect_info(State = #state{img=Img},img,_URL,{ok,Info}) ->
+         State#state{img = Img + Info};
+collect_info(State = #state{script=Script},script,_URL,{ok,Info}) ->
+         State#state{script = Script + Info};
+collect_info(State = #state{errors=Errors},_Type,URL,{error,Reason}) ->
+         State#state{errors=[{URL,Reason}|Errors]}.
 
-wait_for_responses(State,Counter) -> []. %listener
+%messages from workers
+wait_for_responses(State,0) ->
+    finalize(State,0);
+
+wait_for_responses(State,Counter) ->
+    receive
+      {component,Type,URL,Info} ->
+          wait_for_responses(collect_info(State,Type,URL,Info),Counter - 1);
+      timeout -> finalize(State,Counter)
+    end.
+
+%prepares variables for printing
+finalize(State,Left) -> [].
