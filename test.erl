@@ -75,13 +75,15 @@ rDup(L) ->
 
 %spawn workers for every URl, who send back info about components -> getinfo
 spawn_workers(URLctx,Type,URLs) ->
-
   lists:foreach(fun (Url) -> spawn( fun () ->
                                     self() ! {component, Type,Url,get_info(URLctx,Url)}
                                     end)
               end, URLs).
 
-get_url_context(URL) -> []. %% gib my url with context
+get_url_context(URL) ->
+  {http,_,Root,_Port,Path,_Query} = http_uri:parse(URL),
+  Ctx = string:sub_string(Path,1, string:rstr(Path,"/")),
+  {"http://"++Root,Ctx}. %% gib my url with context
 
 get_info(URlctx,Url) -> [].
 
