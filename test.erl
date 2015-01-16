@@ -87,6 +87,19 @@ get_url_context(URL) ->
 
 get_info(URlctx,Url) -> [].
 
+
+%FULL URL FUNCTIONS
+%% abs url inside the same server ej: /img/image.png
+full_url({Root,_Context},ComponentUrl=[$/|_]) ->
+  Root ++ ComponentUrl;
+%% full url ej: http://other.com/img.png
+full_url({_Root,_Context},ComponentUrl="http://"++_) ->
+  ComponentUrl;
+% everything else is considerer a relative path.. obviously its wrong (../img)
+full_url({Root,Context},ComponentUrl) ->
+  Root ++ Context ++ "/" ++ ComponentUrl.
+
+
 %collect infos recieved from wait_for_resposnses and add them to proper field of State
 collect_info(State = #state{css=Css},css,_URL,{ok,Info}) ->
          State#state{css = Css + Info};
