@@ -129,4 +129,12 @@ wait_for_responses(State,Counter) ->
     end.
 
 %prepares variables for printing
-finalize(State,Left) -> [].
+ finalize(State,Left) ->
+  PageSize =  State#state.page,
+  ImgSize =  State#state.img,
+  CssSize =  State#state.css, %maybe one day will work
+  ScriptSize =  State#state.script,
+  Errors =  State#state.errors,
+  TRef =  State#state.timer,
+  erlang:cancel_timer(TRef),
+  {PageSize,ImgSize,CssSize,ScriptSize,Errors,Left}.
