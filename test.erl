@@ -133,7 +133,6 @@ wait_for_responses(State,Counter) ->
   Errors =  State#state.errors,
   TRef =  State#state.timer,
   erlang:cancel_timer(TRef),
-   io:format("html size: ~.2fkb~n",[PageSize/1024]),
   printing(PageSize,ImgSize,CssSize,ScriptSize).
 
 printing(PageSize,ImgSize,CssSize,ScriptSize)->
