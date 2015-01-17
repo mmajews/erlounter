@@ -81,7 +81,7 @@ spawn_workers(URLctx,Type,URLs) ->
               end, URLs).
 
 get_url_context(URL) ->
-  {http,_,Root,_Port,Path,_Query} = http_uri:parse(URL),
+  {ok,{http,_,Root,_Port,Path,_Query}} = http_uri:parse(URL),
   Ctx = string:sub_string(Path,1, string:rstr(Path,"/")),
   {"http://"++Root,Ctx}. %% gib my url with context
 
