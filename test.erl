@@ -1,3 +1,11 @@
+%%%-------------------------------------------------------------------
+%%% @author Hubert
+%%% @copyright (C) 2014, <COMPANY>
+%%% @doc
+%%%
+%%% @end
+%%% Created : 17. gru 2014 15:54
+%%%-
 -module(test).
 -author("Hubert").
 
@@ -29,12 +37,11 @@ got_page_info(URLpassed, PageSize,Body) ->
 
   %particular files being listed and removing duplicates
   Imgs = rDup(mochiweb_xpath:execute("//img/@src",Tree)),
-  io:format(Imgs),
-  io:format("\n"),
+
   %css does not work, do not know why
   %Css = rDup(mochiweb_xpath:execute("//link[@rel=’stylesheet’]/@href",Tree)),
   Scripts = rDup(mochiweb_xpath:execute("//script/@src",Tree)),
-  io:format(Scripts),
+
 
   %preapring URL
   URL = get_url_context(URLpassed),
@@ -65,8 +72,9 @@ rDup(L) ->
 
 %spawn workers for every URl, who send back info about components -> getinfo
 spawn_workers(URLctx,Type,URLs) ->
+  Supervisor = self(),
   lists:foreach(fun (Url) -> spawn( fun () ->
-                                    self() ! {component, Type,Url,get_info(URLctx,Url)}
+                                    Supervisor ! {component, Type,Url,get_info(URLctx,Url)}
                                     end)
               end, URLs).
 
