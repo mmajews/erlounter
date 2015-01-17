@@ -10,6 +10,7 @@
 -author("Hubert").
 
 %% API
+-export([printing/4]).
 -export([page_info/1]).
 -export([got_page_info/3]).
 -export([content_length/1]).
@@ -21,8 +22,6 @@
 %declaring record that will hold number of images, css and scripts
 -record(state, {page,timer,errors,img,css,script}).
 
-
-
 page_info(URL) ->
   inets:start(),
   case httpc:request(URL) of
@@ -32,12 +31,9 @@ page_info(URL) ->
       {error,Reason}
   end.
 
-
-
 got_page_info(URLpassed, PageSize,Body) ->
   %getting the parsed version of website
   Tree = mochiweb_html:parse(Body),
-
 
   %particular files being listed and removing duplicates
   Imgs = rDup(mochiweb_xpath:execute("//img/@src",Tree)),
@@ -61,8 +57,8 @@ got_page_info(URLpassed, PageSize,Body) ->
 
   %number of elements -> so number of responses we should wait for
   wait_for_responses(State,length(Imgs)  + length(Scripts)),
+  {ok}.
 
-  lists:flatten(io_lib:format("~p", [Tree])).
 
 content_length(Headers) ->
   %proplists:get_value(Key,List,Default)
@@ -137,4 +133,12 @@ wait_for_responses(State,Counter) ->
   Errors =  State#state.errors,
   TRef =  State#state.timer,
   erlang:cancel_timer(TRef),
-  {PageSize,ImgSize,CssSize,ScriptSize,Errors,Left}.
+   io:format("html size: ~.2fkb~n",[PageSize/1024]),
+  printing(PageSize,ImgSize,CssSize,ScriptSize).
+
+printing(PageSize,ImgSize,CssSize,ScriptSize)->
+  io:format("html size: ~.2fkb~n",[PageSize/1024]),
+  io:format("images size: ~.2fkb~n",[ImgSize/1024]),
+  io:format("stylesheet size: ~.2fkb~n",[CssSize/1024]),
+  io:format("script size: ~.2fkb~n",[ScriptSize/1024]),
+  {ok}.
