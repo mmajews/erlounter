@@ -1,11 +1,3 @@
-%%%-------------------------------------------------------------------
-%%% @author Hubert
-%%% @copyright (C) 2014, <COMPANY>
-%%% @doc
-%%%
-%%% @end
-%%% Created : 17. gru 2014 15:54
-%%%-------------------------------------------------------------------
 -module(test).
 -author("Hubert").
 
@@ -37,15 +29,18 @@ got_page_info(URLpassed, PageSize,Body) ->
 
   %particular files being listed and removing duplicates
   Imgs = rDup(mochiweb_xpath:execute("//img/@src",Tree)),
-
+  io:format(Imgs),
+  io:format("\n"),
   %css does not work, do not know why
   %Css = rDup(mochiweb_xpath:execute("//link[@rel=’stylesheet’]/@href",Tree)),
-
   Scripts = rDup(mochiweb_xpath:execute("//script/@src",Tree)),
+  io:format(Scripts),
 
   %preapring URL
   URL = get_url_context(URLpassed),
-
+  spawn_workers(URL,img,lists:map(fun  binary_to_list/1,Imgs)),
+  spawn_workers(URL,script,lists:map(fun  binary_to_list/1,Scripts)),
+  
   %Starts a timer which will send the message Msg to Dest after Time milliseconds.
   TRef = erlang:send_after(10000,self(),timeout),
   State = #state{page=PageSize,
@@ -58,7 +53,6 @@ got_page_info(URLpassed, PageSize,Body) ->
   %number of elements -> so number of responses we should wait for
   wait_for_responses(State,length(Imgs)  + length(Scripts)),
   {ok}.
-
 
 content_length(Headers) ->
   %proplists:get_value(Key,List,Default)
@@ -102,7 +96,6 @@ full_url({_Root,_Context},ComponentUrl="http://"++_) ->
 full_url({Root,Context},ComponentUrl) ->
   Root ++ Context ++ "/" ++ ComponentUrl.
 
-
 %collect infos recieved from wait_for_resposnses and add them to proper field of State
 collect_info(State = #state{css=Css},css,_URL,{ok,Info}) ->
          State#state{css = Css + Info};
@@ -138,6 +131,6 @@ wait_for_responses(State,Counter) ->
 printing(PageSize,ImgSize,CssSize,ScriptSize)->
   io:format("html size: ~.2fkb~n",[PageSize/1024]),
   io:format("images size: ~.2fkb~n",[ImgSize/1024]),
-  io:format("stylesheet size: ~.2fkb~n",[CssSize/1024]),
   io:format("script size: ~.2fkb~n",[ScriptSize/1024]),
+ % io:format("stylesheet size: ~.2fkb~n",[CssSize/1024]),
   {ok}.
