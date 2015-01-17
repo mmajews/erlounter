@@ -10,6 +10,7 @@
 -author("Hubert").
 
 %% API
+-compile(export_all).
 -export([printing/4]).
 -export([page_info/1]).
 -export([got_page_info/3]).
@@ -18,9 +19,12 @@
 -export([get_info/2]).
 -export([get_url_context/1]).
 -export([wait_for_responses/2]).
-
+-export([check/0]).
 %declaring record that will hold number of images, css and scripts
 -record(state, {page,timer,errors,img,css,script}).
+
+check()->
+  "LOL".
 
 page_info(URL) ->
   inets:start(),
@@ -49,7 +53,7 @@ got_page_info(URLpassed, PageSize,Body) ->
   spawn_workers(URL,script,lists:map(fun  binary_to_list/1,Scripts)),
   
   %Starts a timer which will send the message Msg to Dest after Time milliseconds.
-  TRef = erlang:send_after(10000,self(),timeout),
+  TRef = erlang:send_after(1000,self(),timeout),
   State = #state{page=PageSize,
     timer=TRef,
     errors=[],
@@ -59,7 +63,7 @@ got_page_info(URLpassed, PageSize,Body) ->
 
   %number of elements -> so number of responses we should wait for
   wait_for_responses(State,length(Imgs)  + length(Scripts)),
-  {ok}.
+  "Arghhhhhh".
 
 content_length(Headers) ->
   %proplists:get_value(Key,List,Default)
@@ -137,8 +141,6 @@ wait_for_responses(State,Counter) ->
   printing(PageSize,ImgSize,CssSize,ScriptSize).
 
 printing(PageSize,ImgSize,CssSize,ScriptSize)->
-  io:format("html size: ~.2fkb~n",[PageSize/1024]),
-  io:format("images size: ~.2fkb~n",[ImgSize/1024]),
-  io:format("script size: ~.2fkb~n",[ScriptSize/1024]),
- % io:format("stylesheet size: ~.2fkb~n",[CssSize/1024]),
-  {ok}.
+  "html size: ~.2fkb~n" ++ [PageSize/1024]
+  ++ "images size: ~.2fkb~n" ++ [ImgSize/1024]
+  ++ "script size: ~.2fkb~n" ++ [ScriptSize/1024].
