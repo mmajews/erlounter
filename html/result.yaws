@@ -1,18 +1,20 @@
 
 <html>
 <head>
-<LINK href="style.css" rel="stylesheet" type="text/css">
+    <LINK href="style.css" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
 </head>
   <body>
     <form action="#" method="post" name="sign up for beta form">
       <div class="description">
         <p>Results: </p>
 			  <erl>
+
 			  		out(A)->
-				Value1 = yaws_api:queryvar(A,"Page"),
-				{html, test:page_info(element(2,Value1))}.
-				</erl>
+				          Value1 = yaws_api:queryvar(A,"Page"),
+				          {html, test:page_info(element(2,Value1))}.
+			  </erl>
 	</div>
     </form>
   </body>

@@ -64,9 +64,14 @@ got_page_info(URLpassed, PageSize,Body) ->
 
   %number of elements -> so number of responses we should wait for
   Result = wait_for_responses(State,length(Imgs)  + length(Scripts)),
-  string:concat(string:concat(string:concat(string:concat(string:concat("Images: /n",float_to_list(Result#result.img,[{decimals, 4}]))," Html: "),
-    float_to_list(Result#result.html,[{decimals, 4}]))," Scripts: "),
-    float_to_list(Result#result.script,[{decimals, 4}])).
+%%   string:concat(string:concat(string:concat(string:concat(string:concat("Images: ",float_to_list(Result#result.img,[{decimals, 4}]))," Html: "),
+%%     float_to_list(Result#result.html,[{decimals, 4}]))," Scripts: "),
+%%     float_to_list(Result#result.script,[{decimals, 4}])).
+
+          "Images: " ++ float_to_list(Result#result.img,[{decimals, 4}]) ++
+          "kB Html: " ++ float_to_list(Result#result.html,[{decimals, 4}]) ++
+          "kB Scripts: " ++ float_to_list(Result#result.script,[{decimals, 4}]) ++ "kB".
+
   %Result#result.img ++ Result#result.script.
 
 content_length(Headers) ->

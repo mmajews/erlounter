@@ -20,7 +20,7 @@
          <p>Erlounter</p>
       </div>
       <div class="description">
-        <p>Find the size of images, scripts and html of the website !</p>
+        <p>Find the size of images, scripts and html of the website!</p>
       </div>
       <div class="input">
 		<input type="text" class="button" id="link" name="link" placeholder="http://www.google.com">
