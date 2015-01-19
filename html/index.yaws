@@ -3,13 +3,13 @@
 <title>Erlounter</title>
 <LINK href="style.css" rel="stylesheet" type="text/css">
    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+   <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
 	<script type="text/javascript">
     function fun()
 	{
 		var myURL = "http://localhost:8085/"
 		var myString = "result.yaws?Page=";
 		myString = myString + document.getElementById("link").value;
-		alert(myString);
 		window.location.href = myURL + myString;
 	}
 </script>
@@ -24,7 +24,7 @@
       </div>
       <div class="input">
 		<input type="text" class="button" id="link" name="link" placeholder="http://www.google.com">
-		<input type="button"  class="button" id="submit" value="GO" onclick="fun()">    
+		<input type="button"  class="button" id="submit" value="GO" onclick="fun()">
 	 </div>
     </form>
   </body>
